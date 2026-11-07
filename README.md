@@ -60,16 +60,16 @@
 ## [02] Real Terminal Screenshots
 
 ### A // ASCII Biometric Scanner & Real-Time Hardware Radiography (NVML + WDDM + UMA)
-![ASCII Scanner and Hardware Radiography](./docs/screenshots/01-scanner-and-hardware.jpg)
+![ASCII Scanner and Hardware Radiography](./docs/screenshots/01-scanner-and-hardware.png)
 
 ### B // Section-Based SOTA Diagnostic Cards (Segmented VRAM Bar, 4K-32K Curve & Exact Flags)
-![SOTA Diagnostic Cards](./docs/screenshots/02-sota-diagnostic-cards.jpg)
+![SOTA Diagnostic Cards](./docs/screenshots/02-sota-diagnostic-cards.png)
 
 ### C // Official Artificial Analysis Leaderboard (`Small 4B-40B` & `Tiny <=4B`) vs Your Hardware
-![Artificial Analysis Leaderboard vs Hardware](./docs/screenshots/03-artificial-analysis-leaderboard.jpg)
+![Artificial Analysis Leaderboard vs Hardware](./docs/screenshots/03-artificial-analysis-leaderboard.png)
 
 ### D // Interactive Laboratory: Real-Time Model Simulation, Duels (`1 vs 13`) & Quantization Inspector
-![Interactive Lab and Simulator](./docs/screenshots/04-interactive-lab.jpg)
+![Interactive Lab and Simulator](./docs/screenshots/04-interactive-lab.png)
 
 ---
 

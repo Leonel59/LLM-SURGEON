@@ -37,3 +37,4 @@ llm-surgeon
 - `llm-surgeon --simulate=1vs13` — Duelo en tiempo real entre el modelo `#1` y el `#13`.
 - `llm-surgeon --inspect=k2-horizon-7b` — Muestra la tabla de 6 cuantizaciones (`Q8_0` a `Q3_K_M`).
 - `llm-surgeon --security-audit` — Imprime el Certificado Zero-Trust y los hashes **SHA-256**.
+
