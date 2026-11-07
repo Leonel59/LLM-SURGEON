@@ -1,0 +1,30 @@
+name: Security & Zero-Trust Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  security-audit:
+    name: Verify 0-Deps, No-Shell & Loopback Guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run Static Security & Privacy Test Suite
+        run: npm test
+
+      - name: Generate SHA-256 Codebase Certificate
+        run: npm run security:audit
+

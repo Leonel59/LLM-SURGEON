@@ -1,0 +1,46 @@
+{
+  "name": "llm-surgeon",
+  "version": "2.0.0",
+  "description": "Surgical local AI hardware diagnostic CLI, GQA KV-Cache physics simulator, and real-time token benchmark (0 dependencies, 0 telemetry, Zero-Trust auditable).",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "llm-surgeon": "./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leonel59/LLM-SURGEON.git"
+  },
+  "homepage": "https://github.com/Leonel59/LLM-SURGEON#readme",
+  "bugs": {
+    "url": "https://github.com/Leonel59/LLM-SURGEON/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "fast": "node src/index.js --fast",
+    "bench": "node src/index.js --stress",
+    "offline": "node src/index.js --offline",
+    "security:audit": "node src/index.js --security-audit --only-audit",
+    "test": "node --test test/security.test.js"
+  },
+  "keywords": [
+    "llm",
+    "local-ai",
+    "hardware-diagnostics",
+    "vram-calculator",
+    "artificial-analysis",
+    "canirun",
+    "llmfit",
+    "ollama",
+    "lm-studio",
+    "llama-cpp",
+    "benchmark",
+    "zero-dependency",
+    "cli"
+  ],
+  "author": "Leonel59",
+  "license": "MIT"
+}
