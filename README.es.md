@@ -16,7 +16,7 @@
 
 - **[CanIRun.ai](https://canirun.ai/):** Organizacion limpia por secciones de uso (*Coding, Reasoning, General, Vision, Media*).
 - **[llmfit](https://www.llmfit.org/):** Ejecucion nativa en terminal, pero eliminando el listado masivo de 500 modelos para mostrar solo los lideres reales por categoria.
-- **[Artificial Analysis](https://artificialanalysis.ai/models/open-source/small):** Integracion del *Progress Index v1* y *Openness Index* de los modelos **Small (4B-40B)** y **Tiny (<=4B)** mas recientes del mercado.
+- **[Artificial Analysis](https://artificialanalysis.ai/models/open-source):** Integracion del *Progress Index v1* y *Openness Index* a traves de las 4 escalas de modelos Open-Source: **Tiny (`<=4B`)**, **Small (`4B-40B`)**, **Medium (`40B-150B`)** y **Large (`>150B` Frontier: `Kimi K3.1 Pro`, `DeepSeek V4.1 Flash`, `GLM-5.3`, `MiMo-V2.6-Pro`)**.
 
 ---
 

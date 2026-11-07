@@ -42,6 +42,12 @@ export const SOTA_CATEGORIES = [
     title: 'SECCION 06 // ARTE GENERATIVO, IMAGEN & TRANSCRIPCION DE VOZ',
     icon: '[MEDIA]',
     subtitle: 'Difusion de imagenes locales y reconocimiento de voz neuronal ultrarrapido'
+  },
+  {
+    id: 'aa_heavy_frontier',
+    title: 'SECCION 07 // ARTIFICIAL ANALYSIS MEDIUM (40B-150B) & LARGE FRONTIER (>150B)',
+    icon: '[HEAVY-AA]',
+    subtitle: 'Modelos para Workstations (64GB-192GB RAM/VRAM): Llama 3.3 70B, Kimi K3.1 Pro, DeepSeek V4.1 Flash, GLM-5.3, MiMo-V2.6'
   }
 ];
 
@@ -566,5 +572,145 @@ export const SOTA_MODELS = [
     lmsModel: 'ggerganov/whisper.cpp (ggml-large-v3-turbo)',
     surgicalSummary:
       'Ocupa apenas ~1.5 GB de VRAM en FP16 y transcribe 1 hora de audio en espanol en menos de 45 segundos en tu RTX 5050.'
+  },
+
+  // ==================== 6. ARTIFICIAL ANALYSIS MEDIUM (40B-150B) & LARGE FRONTIER (>150B) ====================
+  {
+    id: 'llama-3.3-70b',
+    name: 'Llama 3.3 70B / DeepSeek R1 70B',
+    provider: 'Meta / DeepSeek',
+    category: 'aa_heavy_frontier',
+    aaBracket: 'Medium Models (40B-150B) · 70B Dense',
+    aaProgressIndex: 288,
+    aaOpennessIndex: 40,
+    architecture: 'Dense Frontier Transformer (70B)',
+    isMoE: false,
+    paramsTotalB: 70.6,
+    paramsActiveB: 70.6,
+    layers: 80,
+    kvHeads: 8,
+    headDim: 128,
+    maxNativeCtx: 131072,
+    sotaQualityScore: 98,
+    badge: '[MEDIUM 40B-150B | 70B DENSO]',
+    ollamaCmd: 'ollama run llama3.3:70b-instruct-q4_K_M',
+    lmsModel: 'lmstudio-community/Llama-3.3-70B-Instruct-GGUF',
+    surgicalSummary:
+      'Estandar del segmento Medium Models (40B-150B) en Artificial Analysis. Pesa ~36.2 GB en IQ4_XS: requiere al menos 48GB-64GB de RAM/VRAM combinada para no paginar en disco SSD.'
+  },
+  {
+    id: 'llama-4-scout-109b-a17b',
+    name: 'Llama 4 Scout 109B-A17B (MoE)',
+    provider: 'Meta AI',
+    category: 'aa_heavy_frontier',
+    aaBracket: 'Medium Models (40B-150B) · MoE 17B Active',
+    aaProgressIndex: 296,
+    aaOpennessIndex: 40,
+    architecture: 'Sparse MoE (109B Total / 17B Active)',
+    isMoE: true,
+    paramsTotalB: 109.0,
+    paramsActiveB: 17.0,
+    layers: 48,
+    kvHeads: 8,
+    headDim: 128,
+    maxNativeCtx: 131072,
+    sotaQualityScore: 99,
+    badge: '[MEDIUM 40B-150B | 109B MoE]',
+    ollamaCmd: 'ollama run llama4:scout',
+    lmsModel: 'meta-llama/Llama-4-Scout-17B-16E-Instruct-GGUF',
+    surgicalSummary:
+      'Lider MoE en el segmento Medium (40B-150B). Solo activa 17B por token, pero alojar sus 109B totales (~54 GB en IQ4_XS) exige una Workstation con 64GB-96GB de RAM DDR5 o Mac Studio Unified Memory.'
+  },
+  {
+    id: 'mimo-v2.6-pro',
+    name: 'MiMo-V2.6-Pro (Frontier MoE)',
+    provider: 'Xiaomi AI',
+    category: 'aa_heavy_frontier',
+    aaBracket: 'Medium/Large Frontier · Top 4 Global AA',
+    aaProgressIndex: 314,
+    aaOpennessIndex: 39,
+    architecture: 'High-Density Reasoning MoE',
+    isMoE: true,
+    paramsTotalB: 142.0,
+    paramsActiveB: 16.0,
+    layers: 64,
+    kvHeads: 8,
+    headDim: 128,
+    maxNativeCtx: 131072,
+    sotaQualityScore: 99,
+    badge: '[#4 GLOBAL OPEN-SOURCE AA | PI: 314]',
+    ollamaCmd: 'vllm / llama-cli --model MiMo-V2.6-Pro-GGUF',
+    lmsModel: 'Xiaomi/MiMo-V2.6-Pro-GGUF',
+    surgicalSummary:
+      'Top #4 absoluto en inteligencia en Artificial Analysis (All Open Source Models). Disenado para estaciones de trabajo con 96GB+ de memoria combinada.'
+  },
+  {
+    id: 'glm-5.3-max',
+    name: 'GLM-5.3 (max) (Frontier MoE)',
+    provider: 'Z.ai / Zhipu',
+    category: 'aa_heavy_frontier',
+    aaBracket: 'Large Models (>150B) · Top 3 Global AA',
+    aaProgressIndex: 318,
+    aaOpennessIndex: 39,
+    architecture: 'Frontier Mixture-of-Experts (>150B)',
+    isMoE: true,
+    paramsTotalB: 180.0,
+    paramsActiveB: 22.0,
+    layers: 80,
+    kvHeads: 8,
+    headDim: 128,
+    maxNativeCtx: 131072,
+    sotaQualityScore: 100,
+    badge: '[#3 GLOBAL OPEN-SOURCE AA | PI: 318]',
+    ollamaCmd: 'vllm / llama-cli --model GLM-5.3-Max-GGUF',
+    lmsModel: 'THUDM/GLM-5.3-Max-GGUF',
+    surgicalSummary:
+      'Top #3 global en Artificial Analysis (Large Models >150B). Requiere ~92 GB de memoria en cuantizacion de 4 bits (Workstation 128GB RAM o Multi-GPU).'
+  },
+  {
+    id: 'deepseek-v4.1-flash-1017',
+    name: 'DeepSeek V4.1 Flash 1017 (max)',
+    provider: 'DeepSeek AI',
+    category: 'aa_heavy_frontier',
+    aaBracket: 'Large Models (>150B) · Top 2 Global AA',
+    aaProgressIndex: 324,
+    aaOpennessIndex: 41,
+    architecture: 'MLA Sparse MoE (>200B Total / 21B Active)',
+    isMoE: true,
+    paramsTotalB: 236.0,
+    paramsActiveB: 21.0,
+    layers: 60,
+    kvHeads: 4,
+    headDim: 128,
+    maxNativeCtx: 131072,
+    sotaQualityScore: 100,
+    badge: '[#2 GLOBAL OPEN-SOURCE AA | PI: 324]',
+    ollamaCmd: 'vllm / ktransformers DeepSeek-V4.1-Flash',
+    lmsModel: 'deepseek-ai/DeepSeek-V4.1-Flash-GGUF',
+    surgicalSummary:
+      'Subcampeon absoluto #2 de todos los modelos Open Source en Artificial Analysis. Usa Multi-Head Latent Attention (MLA), pero sus >200B parametros exigen 128GB+ de RAM/VRAM.'
+  },
+  {
+    id: 'kimi-k3.1-pro',
+    name: 'Kimi K3.1 Pro (Frontier MoE)',
+    provider: 'Moonshot AI',
+    category: 'aa_heavy_frontier',
+    aaBracket: 'Large Models (>150B) · #1 Global AA',
+    aaProgressIndex: 329,
+    aaOpennessIndex: 39,
+    architecture: 'Ultra-Scale MoE (>250B Total / 24B Active)',
+    isMoE: true,
+    paramsTotalB: 260.0,
+    paramsActiveB: 24.0,
+    layers: 64,
+    kvHeads: 8,
+    headDim: 128,
+    maxNativeCtx: 131072,
+    sotaQualityScore: 100,
+    badge: '[#1 GLOBAL OPEN-SOURCE AA | PI: 329]',
+    ollamaCmd: 'vllm / ktransformers Kimi-K3.1-Pro',
+    lmsModel: 'moonshotai/Kimi-K3.1-Pro-GGUF',
+    surgicalSummary:
+      'El rey #1 absoluto de inteligencia en Artificial Analysis (All Open Source Models). Requiere ~132 GB en 4-bit (Servidores Multi-GPU, Mac Studio 192GB o Workstation Threadripper/EPYC).'
   }
 ];

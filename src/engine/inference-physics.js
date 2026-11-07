@@ -286,11 +286,24 @@ export function evaluateModelOnHardware(model, hardware, downloadedModels = []) 
     };
   });
 
-  // Calcular Porcentaje Quirúrgico de Viabilidad en este Portátil (0 - 100%)
-  const refSpeed = selectedEval.cleanState.decodeTokPerSec;
+  // Calcular Porcentaje Quirurgico de Viabilidad en este Portatil / PC (0 - 100%)
+  const maxSystemMemoryBudgetGiB = Number((gpu.cleanModeFreeGiB + Math.max(2, ram.osVisibleGB - 4.0)).toFixed(2));
+  const exceedsTotalSystemMemory = selectedEval.cleanState.totalFootprintGiB > maxSystemMemoryBudgetGiB;
+
+  const refSpeed = exceedsTotalSystemMemory
+    ? Number(Math.max(0.4, selectedEval.cleanState.decodeTokPerSec * 0.12).toFixed(1))
+    : selectedEval.cleanState.decodeTokPerSec;
+
+  if (exceedsTotalSystemMemory) {
+    selectedEval.cleanState.decodeTokPerSec = refSpeed;
+    selectedEval.liveState.decodeTokPerSec = Number(Math.max(0.3, refSpeed * 0.85).toFixed(1));
+    selectedEval.cleanState.executionMode = `EXCEDE RAM+VRAM (Requiere ~${Math.ceil(selectedEval.cleanState.totalFootprintGiB + 6)}GB)`;
+  }
+
   const speedScore = Math.min(100, Math.round((refSpeed / 55) * 100));
-  const fitScore =
-    selectedEval.liveState.gpuLayerPct === 100
+  const fitScore = exceedsTotalSystemMemory
+    ? 10
+    : selectedEval.liveState.gpuLayerPct === 100
       ? 100
       : selectedEval.cleanState.gpuLayerPct === 100
         ? 90
@@ -299,23 +312,27 @@ export function evaluateModelOnHardware(model, hardware, downloadedModels = []) 
           : Math.max(40, selectedEval.cleanState.gpuLayerPct);
   const qualityScore = Math.round(model.sotaQualityScore * selectedEval.quant.qualityRetention);
 
-  const surgicalFitPct = Math.min(
-    99,
-    Math.round(qualityScore * 0.42 + speedScore * 0.33 + fitScore * 0.25)
-  );
+  const surgicalFitPct = exceedsTotalSystemMemory
+    ? Math.min(38, Math.round((maxSystemMemoryBudgetGiB / selectedEval.cleanState.totalFootprintGiB) * 35))
+    : Math.min(99, Math.round(qualityScore * 0.42 + speedScore * 0.33 + fitScore * 0.25));
 
   let tier = 'A';
-  if (surgicalFitPct >= 93) tier = 'S+';
+  if (exceedsTotalSystemMemory) tier = 'D';
+  else if (surgicalFitPct >= 93) tier = 'S+';
   else if (surgicalFitPct >= 88) tier = 'S';
   else if (surgicalFitPct >= 80) tier = 'A';
   else if (surgicalFitPct >= 70) tier = 'B';
   else tier = 'C';
 
-  // Generar Diagnóstico de Comportamiento en el Portátil
+  // Generar Diagnostico de Comportamiento en el Portatil / PC
   let behaviorVerdict = '';
   let optimizationTip = '';
 
-  if (selectedEval.liveState.gpuLayerPct === 100) {
+  if (exceedsTotalSystemMemory) {
+    const neededGB = Math.ceil(selectedEval.cleanState.totalFootprintGiB + 6);
+    behaviorVerdict = `DESBORDAMIENTO DE MEMORIA (MEDIUM/LARGE >40B): Este modelo exige ${selectedEval.cleanState.totalFootprintGiB} GB y tu equipo suma ${maxSystemMemoryBudgetGiB} GB libres utiles (${gpu.cleanModeFreeGiB}GB VRAM + RAM libre). Intentar abrirlo forzaria paginacion en disco SSD (<1 tok/s).`;
+    optimizationTip = `Para correr ${model.name} localmente sin swap necesitas una Workstation/Mac Studio con al menos ${neededGB} GB de RAM/VRAM combinada (o consumirlo via API).`;
+  } else if (selectedEval.liveState.gpuLayerPct === 100) {
     behaviorVerdict = `ÓPTIMO EN TIEMPO REAL: Cabe 100% en tus ${gpu.freeGiB} GB de VRAM libres actuales (${selectedEval.liveState.gpuLayers}/${model.layers} capas en GPU). Sin cuellos de botella por PCIe ni RAM.`;
     if (selectedEval.maxCtxFp16Clean < 32768 && !model.isWorkloadType) {
       optimizationTip = `Soporta hasta ~${Math.round(selectedEval.maxCtxFp16Clean / 1024)}K de contexto en FP16 puro. Si activas Flash-Attention + KV Cache Q8_0, duplicas el contexto en GPU hasta ~${Math.round(selectedEval.maxCtxQ8Clean / 1024)}K tokens sin perder velocidad.`;

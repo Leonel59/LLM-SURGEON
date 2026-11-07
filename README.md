@@ -4,7 +4,7 @@
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0%20(100%25%20Native%20Node.js)-brightgreen)
 ![Zero Telemetry](https://img.shields.io/badge/Telemetry-0%20(100%25%20Offline%20%2F%20Local)-blue)
 ![Security Verified](https://img.shields.io/badge/Security-CWE--78%20Immune%20%7C%20No--PII-success)
-![Artificial Analysis](https://img.shields.io/badge/Benchmarks-Artificial%20Analysis%20(4B--40B%20%26%20%3C%3D4B)-orange)
+![Artificial Analysis](https://img.shields.io/badge/Benchmarks-Artificial%20Analysis%20(Tiny%20%7C%20Small%20%7C%20Medium%20%7C%20Large)-orange)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)
 ![License MIT](https://img.shields.io/badge/License-MIT-yellow)
 
@@ -42,16 +42,21 @@
 
 1. **Inspired by [CanIRun.ai](https://canirun.ai/):** We adopted its clean **section-based curation** (*Coding, Reasoning, General, Vision, Media*). However, because *CanIRun.ai* runs inside a web browser sandbox, it cannot see your real free VRAM, background OS/WDDM processes eating GPU memory, iGPU UMA RAM reservations, or dual-channel memory topology.
 2. **Inspired by [llmfit](https://www.llmfit.org/):** We adopted native **terminal hardware probing**. However, *llmfit* dumps an overwhelming list of nearly 500 uncurated models into the console, making it hard to find the actual SOTA leaders. `LLM-Surgeon` replaces that raw list with **6 structured, high-signal SOTA sections**, adds **4K-to-32K context degradation curves**, and introduces an **interactive real-time token simulator**.
-3. **Powered by [Artificial Analysis](https://artificialanalysis.ai/models/open-source/small) Benchmarks:** We integrated the latest **Artificial Analysis Progress Index v1** and **Openness Index** metrics from the *Small Models (4B-40B)* and *Tiny Models (<=4B)* leaderboards (`Nanbeige 4.3-33B`, `Qwen 3.6 27B`, `K2 Horizon MoVA 36B-A4B`, `K2 Horizon 7B`, `Qwen 3.6 35B-A3B`, `Gemma 4 31B`, `K2 Horizon 3.7B`), cross-referencing their benchmark intelligence against your machine's physical memory bandwidth.
+3. **Powered by [Artificial Analysis](https://artificialanalysis.ai/models/open-source) Multi-Scale Benchmarks:** We integrated the latest **Artificial Analysis Progress Index v1** and **Openness Index** metrics across **all 4 parameter scales**:
+   - **Tiny Models (`<=4B`):** `K2 Horizon 3.7B`, `Gemma 3 4B / Qwen 3 4B`
+   - **Small Models (`4B-40B`):** `Nanbeige 4.3-33B`, `Qwen 3.6 27B`, `K2 Horizon MoVA 36B-A4B`, `Muse Glimmer 30B`, `K2 Horizon 7B`, `Qwen 3.6 35B-A3B`, `G2v3-39A5B`, `Gemma 4 31B`
+   - **Medium Models (`40B-150B`):** `Llama 3.3 70B`, `Llama 4 Scout 109B-A17B MoE`, `MiMo-V2.6-Pro`
+   - **Large Models (`>150B` Frontier):** `Kimi K3.1 Pro (#1 Global)`, `DeepSeek V4.1 Flash 1017 (#2 Global)`, `GLM-5.3 (max) (#3 Global)`
+   cross-referencing their benchmark intelligence against your machine's exact VRAM + System RAM budget.
 
 | Capability / Feature | CanIRun.ai (Web) | llmfit (CLI) | Artificial Analysis (Web) | **LLM-Surgeon v2.0 (CLI)** |
 | :--- | :---: | :---: | :---: | :---: |
-| **Curated SOTA Sections (No 500-model dump)** | `[YES]` | `[NO]` | `[YES]` | **`[YES // 6 SECTIONS]`** |
+| **Curated SOTA Sections (No 500-model dump)** | `[YES]` | `[NO]` | `[YES]` | **`[YES // 7 SECTIONS]`** |
 | **Live Free VRAM vs WDDM Parasitic App Detection** | `[NO]` | `[PARTIAL]` | `[NO]` | **`[YES // LIVE vs CLEAN]`** |
 | **SMBIOS Dual-Channel + iGPU UMA RAM Analysis** | `[NO]` | `[NO]` | `[NO]` | **`[YES // EXACT GB/s]`** |
 | **GQA KV-Cache Math & 4K->32K Context Curve** | `[NO]` | `[PARTIAL]` | `[NO]` | **`[YES // FP16 vs Q8_0]`** |
-| **Artificial Analysis Progress Index (4B-40B / <=4B)** | `[NO]` | `[NO]` | `[YES]` | **`[YES // MAPPED TO PC]`** |
-| **Interactive Live Token Cadence Simulator (`ms/tok`)** | `[NO]` | `[NO]` | `[NO]` | **`[YES // 22 MODELS + DUELS]`** |
+| **Artificial Analysis (`Tiny` / `Small` / `Medium` / `Large`)** | `[NO]` | `[NO]` | `[YES]` | **`[YES // MAPPED TO PC]`** |
+| **Interactive Live Token Cadence Simulator (`ms/tok`)** | `[NO]` | `[NO]` | `[NO]` | **`[YES // 28 MODELS + DUELS]`** |
 | **Live Speed Benchmark on Local Ollama / LM Studio** | `[NO]` | `[NO]` | `[NO]` | **`[YES // TTFT + VRAM PEAK]`** |
 | **Zero NPM Dependencies & Zero Outbound Network** | `[N/A]` | `[YES]` | `[N/A]` | **`[YES // SHA-256 VERIFIED]`** |
 
@@ -200,7 +205,12 @@ npm run security:audit
 
 1. **Basado en la curaduria de [CanIRun.ai](https://canirun.ai/):** Adoptamos su enfoque de mostrar los mejores modelos **organizados por secciones practicas** en vez de listas caoticas. Sin embargo, como *CanIRun.ai* vive en el navegador web, no puede detectar cuanta VRAM real te queda libre, que aplicaciones de Windows (WDDM) te estan robando memoria grafica en segundo plano, ni la reserva UMA de tu grafica integrada.
 2. **Mejorando el enfoque en terminal de [llmfit](https://www.llmfit.org/):** Adoptamos la lectura directa desde consola, pero resolvimos el gran defecto de *llmfit*: escupir una lista gigante de casi 500 modelos donde uno pierde tiempo buscando. `LLM-Surgeon` filtra el ruido en **6 secciones SOTA de alto impacto**, calcula curvas de contexto de `4K a 32K` y anade un **simulador interactivo en vivo**.
-3. **Potenciado con metricas de [Artificial Analysis](https://artificialanalysis.ai/models/open-source/small):** Incorporamos los modelos mas nuevos y sus puntajes oficiales (*Progress Index v1* y *Openness Index*) de las categorias **Small Models (4B-40B)** y **Tiny Models (<=4B)** (`Nanbeige 4.3-33B`, `Qwen 3.6 27B`, `K2 Horizon MoVA 36B-A4B`, `K2 Horizon 7B`, `Qwen 3.6 35B-A3B`, `Gemma 4 31B`, `K2 Horizon 3.7B`), diagnosticando como se comportan especificamente en tus specs.
+3. **Potenciado con metricas Multi-Escala de [Artificial Analysis](https://artificialanalysis.ai/models/open-source):** Incorporamos los modelos mas nuevos y sus puntajes oficiales (*Progress Index v1* y *Openness Index*) a traves de **las 4 escalas de parametros**:
+   - **Tiny Models (`<=4B`):** `K2 Horizon 3.7B`, `Gemma 3 4B / Qwen 3 4B`
+   - **Small Models (`4B-40B`):** `Nanbeige 4.3-33B`, `Qwen 3.6 27B`, `K2 Horizon MoVA 36B-A4B`, `Muse Glimmer 30B`, `K2 Horizon 7B`, `Qwen 3.6 35B-A3B`, `G2v3-39A5B`, `Gemma 4 31B`
+   - **Medium Models (`40B-150B`):** `Llama 3.3 70B`, `Llama 4 Scout 109B-A17B MoE`, `MiMo-V2.6-Pro`
+   - **Large Models (`>150B` Frontier):** `Kimi K3.1 Pro (#1 Global)`, `DeepSeek V4.1 Flash 1017 (#2 Global)`, `GLM-5.3 (max) (#3 Global)`
+   diagnosticando automaticamente cuales corren en tu portatil (8GB-32GB) y cuales requieren Workstations o Clusters (64GB-192GB+).
 
 ---
 

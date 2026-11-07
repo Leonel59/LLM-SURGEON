@@ -358,14 +358,14 @@ export function renderCuratedEvaluations(categories, evaluations, hardware) {
 }
 
 /**
- * Renderiza el Leaderboard Oficial de Artificial Analysis (Small 4B-40B & Tiny <=4B) con ancho compacto sin saltos de linea
+ * Renderiza el Leaderboard Oficial de Artificial Analysis (All Open Source: Tiny <=4B, Small 4B-40B, Medium 40B-150B, Large >150B)
  */
 export function renderArtificialAnalysisLeaderboard(evaluations, hardware) {
   console.log(
-    `${ANSI.bgYellow}${ANSI.bold} [04] LEADERBOARD ARTIFICIAL ANALYSIS (SMALL 4B-40B & TINY <=4B) FRENTE A TUS SPECS REALES ${ANSI.reset}`
+    `${ANSI.bgYellow}${ANSI.bold} [04] LEADERBOARD ARTIFICIAL ANALYSIS (TINY <=4B | SMALL 4B-40B | MEDIUM 40B-150B | LARGE >150B) ${ANSI.reset}`
   );
   console.log(
-    `${ANSI.white}Fuente: artificialanalysis.ai/models/open-source/small :: Cruzado con tu ${hardware.gpu.name} (${hardware.gpu.totalGiB}GB) + ${hardware.ram.physicalHardwareGB}GB ${hardware.ram.memType}-${hardware.ram.speedMTs}${ANSI.reset}`
+    `${ANSI.white}Fuente: artificialanalysis.ai/models/open-source :: Cruzado con tu ${hardware.gpu.name} (${hardware.gpu.totalGiB}GB) + ${hardware.ram.physicalHardwareGB}GB ${hardware.ram.memType}-${hardware.ram.speedMTs}${ANSI.reset}`
   );
   console.log(`${ANSI.gray}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${ANSI.reset}`);
 
@@ -374,8 +374,8 @@ export function renderArtificialAnalysisLeaderboard(evaluations, hardware) {
     .sort((a, b) => b.model.aaProgressIndex - a.model.aaProgressIndex);
 
   const header =
-    `  ${padEndAnsi(ANSI.bold + 'MODELO (4B-40B / <=4B)' + ANSI.reset, 29)}` +
-    `${padEndAnsi(ANSI.bold + 'ARQUITECTURA' + ANSI.reset, 16)}` +
+    `  ${padEndAnsi(ANSI.bold + 'MODELO OPEN-SOURCE (AA)' + ANSI.reset, 29)}` +
+    `${padEndAnsi(ANSI.bold + 'ESCALA / PARAMS' + ANSI.reset, 16)}` +
     `${padEndAnsi(ANSI.bold + 'PROGRESS INDEX' + ANSI.reset, 18)}` +
     `${padEndAnsi(ANSI.bold + 'OPEN' + ANSI.reset, 6)}` +
     `${padEndAnsi(ANSI.bold + 'VELOCIDAD' + ANSI.reset, 15)}` +
@@ -386,7 +386,7 @@ export function renderArtificialAnalysisLeaderboard(evaluations, hardware) {
   for (const ev of aaModels) {
     const m = ev.model;
     const pi = m.aaProgressIndex;
-    const piPct = Math.min(100, Math.round((pi / 310) * 100));
+    const piPct = Math.min(100, Math.round((pi / 335) * 100));
     const piBar = drawBar(piPct, 10);
 
     const paramTxt = m.isMoE
@@ -395,21 +395,23 @@ export function renderArtificialAnalysisLeaderboard(evaluations, hardware) {
 
     const speed = ev.cleanState.decodeTokPerSec;
     const speedStr =
-      speed >= 45
-        ? `${ANSI.brightGreen}[+] ~${speed} t/s${ANSI.reset}`
-        : speed >= 20
-          ? `${ANSI.brightCyan}[*] ~${speed} t/s${ANSI.reset}`
-          : `${ANSI.brightYellow}[~] ~${speed} t/s${ANSI.reset}`;
+      ev.tier === 'D'
+        ? `${ANSI.brightRed}[!] Swap SSD${ANSI.reset}`
+        : speed >= 45
+          ? `${ANSI.brightGreen}[+] ~${speed} t/s${ANSI.reset}`
+          : speed >= 20
+            ? `${ANSI.brightCyan}[*] ~${speed} t/s${ANSI.reset}`
+            : `${ANSI.brightYellow}[~] ~${speed} t/s${ANSI.reset}`;
 
     let specVerdict = '';
-    if (ev.cleanState.gpuLayerPct === 100) {
+    if (ev.tier === 'D') {
+      specVerdict = `${ANSI.brightRed}[!] REQ ~${Math.ceil(ev.cleanState.totalFootprintGiB + 6)}GB RAM/VRAM (${ev.cleanState.totalFootprintGiB}GB)${ANSI.reset}`;
+    } else if (ev.cleanState.gpuLayerPct === 100) {
       specVerdict = `${ANSI.brightGreen}[100% GPU] ${ev.weightsGiB}GB ${ev.selectedQuant.id}${ANSI.reset}`;
     } else if (m.isMoE) {
       specVerdict = `${ANSI.brightCyan}[MoE GPU+RAM] ${ev.cleanState.gpuLayerPct}% GPU + DDR5${ANSI.reset}`;
-    } else if (ev.cleanState.totalFootprintGiB <= hardware.ram.osFreeGB + hardware.gpu.cleanModeFreeGiB) {
-      specVerdict = `${ANSI.brightYellow}[SPLIT RAM] ${ev.cleanState.gpuLayerPct}% GPU + ${ev.cleanState.ramSpillGiB}GB DDR5${ANSI.reset}`;
     } else {
-      specVerdict = `${ANSI.brightRed}[!] EXCEDE RAM LIBRE${ANSI.reset}`;
+      specVerdict = `${ANSI.brightYellow}[SPLIT RAM] ${ev.cleanState.gpuLayerPct}% GPU + ${ev.cleanState.ramSpillGiB}GB DDR5${ANSI.reset}`;
     }
 
     console.log(
@@ -422,15 +424,18 @@ export function renderArtificialAnalysisLeaderboard(evaluations, hardware) {
     );
   }
 
-  console.log(`\n  ${ANSI.brightCyan}${ANSI.bold}[LECTURA QUIRURGICA DE ARTIFICIAL ANALYSIS PARA TU PORTATIL]:${ANSI.reset}`);
+  console.log(`\n  ${ANSI.brightCyan}${ANSI.bold}[LECTURA QUIRURGICA MULTI-ESCALA DE ARTIFICIAL ANALYSIS PARA TU EQUIPO]:${ANSI.reset}`);
   console.log(
-    `  * ${ANSI.brightGreen}Velocidad pura en 8GB VRAM:${ANSI.reset} ${ANSI.bold}K2 Horizon 7B (PI: 263)${ANSI.reset} y ${ANSI.bold}Qwen 3 8B (PI: 244)${ANSI.reset} corren 100% en tu RTX 5050 a 50-62 tok/s.`
+    `  * ${ANSI.brightGreen}Tiny (<=4B) & Small (7B-8B) [100% GPU]:${ANSI.reset} ${ANSI.bold}K2 Horizon 7B (PI: 263)${ANSI.reset} y ${ANSI.bold}K2 Horizon 3.7B (PI: 218)${ANSI.reset} corren 100% en tu RTX 5050 a 60-80 tok/s.`
   );
   console.log(
-    `  * ${ANSI.brightCyan}Maxima inteligencia fluida (>20 tok/s):${ANSI.reset} ${ANSI.bold}K2 Horizon MoVA 36B-A4B (PI: 281)${ANSI.reset} y ${ANSI.bold}Qwen 3.6 35B-A3B (PI: 261)${ANSI.reset} usan tus 32GB DDR5 + 8GB GDDR7 activando solo 3B-4B por token.`
+    `  * ${ANSI.brightCyan}Small MoE (30B-39B) [Hibrido Ideal GPU+DDR5]:${ANSI.reset} ${ANSI.bold}K2 Horizon MoVA 36B-A4B (PI: 281)${ANSI.reset} y ${ANSI.bold}Qwen 3.6 35B-A3B (PI: 261)${ANSI.reset} vuelan a 24-27 tok/s en tus 32GB DDR5 + 8GB VRAM.`
   );
   console.log(
-    `  * ${ANSI.brightYellow}Lideres #1 y #2 globales (Nanbeige 4.3-33B [PI: 305] y Qwen 3.6 27B [PI: 303]):${ANSI.reset} Caben en tus 32GB DDR5 en IQ4_XS (~16-19 GB) sin usar SSD, corriendo a ~4.3-5.4 tok/s.\n`
+    `  * ${ANSI.brightYellow}Small Denso (27B-33B) [Limite de tu RAM]:${ANSI.reset} ${ANSI.bold}Nanbeige 4.3-33B (PI: 305)${ANSI.reset} y ${ANSI.bold}Qwen 3.6 27B (PI: 303)${ANSI.reset} son el techo maximo que cabe en tus 32GB sin swap (~4.3-5.4 tok/s).`
+  );
+  console.log(
+    `  * ${ANSI.brightRed}Medium (40B-150B) & Large (>150B) [Kimi K3.1 Pro, DeepSeek V4.1 Flash, GLM-5.3, Llama 70B]:${ANSI.reset} Exigen entre 42GB y 140GB+ de RAM/VRAM; en equipos de 64GB-192GB se habilitan automaticamente.\n`
   );
 }
 

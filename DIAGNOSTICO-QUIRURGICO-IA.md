@@ -4,10 +4,10 @@
 ## 1. Radiografia Fisica del Hardware
 - **CPU:** AMD Ryzen 5 240 w/ Radeon 760M Graphics (6C/12T @ 4.3 GHz, L3 16 MB, `AVX-512 + AVX2 + FMA3 + VNNI (Óptimo para llama.cpp en CPU)`)
 - **RAM Fisica:** 32 GB (DDR5 @ 5600 MT/s :: Dual-Channel (2x 16GB))
-- **RAM Visible en OS:** 31.31 GB (17.33 GB libres) :: Reserva iGPU UMA: ~0.69 GB
+- **RAM Visible en OS:** 31.31 GB (16.64 GB libres) :: Reserva iGPU UMA: ~0.69 GB
 - **Ancho de Banda RAM:** 89.6 GB/s pico / ~66.3 GB/s sostenidos en inferencia CPU
 - **GPU Dedicada:** NVIDIA GeForce RTX 5050 Laptop GPU (NVIDIA Blackwell (GB207), 2560 CUDA Cores, GDDR7 (128-bit) @ ~384 GB/s, PCIe Gen 4 x8)
-- **VRAM en Vivo vs Limpio:** 6.52 GB libres ahora (1235 MiB ocupados por 15 procesos) -> **7.06 GB libres en Modo Quirurgico Limpio**
+- **VRAM en Vivo vs Limpio:** 6.53 GB libres ahora (1225 MiB ocupados por 15 procesos) -> **7.06 GB libres en Modo Quirurgico Limpio**
 
 ## 2. Matriz SOTA Frente a Tu Portatil
 | # | Modelo IA | Categoria | Progress Index (AA) | Quant Ideal | Huella (8K) | Capas GPU | Velocidad | Contexto 100% GPU | Fit Score |
@@ -34,3 +34,9 @@
 | 20 | **Nanbeige 4.3-33B** | aa_frontier | 305 | `IQ4_XS` | 19.07 GB | 17/60 (28%) | **~4.3 tok/s** | Offload DDR5 | **C (53%)** |
 | 21 | **Muse Glimmer 30B (high)** | aa_frontier | 267 | `IQ4_XS` | 17.46 GB | 18/56 (32%) | **~4.9 tok/s** | Offload DDR5 | **C (52%)** |
 | 22 | **Gemma 4 31B Instruct** | aa_frontier | 254 | `IQ4_XS` | 18.08 GB | 18/60 (30%) | **~4.6 tok/s** | Offload DDR5 | **C (51%)** |
+| 23 | **Llama 3.3 70B / DeepSeek R1 70B** | aa_heavy_frontier | 288 | `IQ4_XS` | 38.3 GB | 9/80 (11%) | **~0.4 tok/s** | Offload DDR5 | **D (31%)** |
+| 24 | **Llama 4 Scout 109B-A17B (MoE)** | aa_heavy_frontier | 296 | `IQ4_XS` | 56.3 GB | 4/48 (8%) | **~0.7 tok/s** | Offload DDR5 | **D (21%)** |
+| 25 | **MiMo-V2.6-Pro (Frontier MoE)** | aa_heavy_frontier | 314 | `IQ4_XS` | 73.13 GB | 4/64 (6%) | **~0.7 tok/s** | Offload DDR5 | **D (16%)** |
+| 26 | **GLM-5.3 (max) (Frontier MoE)** | aa_heavy_frontier | 318 | `IQ4_XS` | 92.43 GB | 4/80 (5%) | **~0.5 tok/s** | Offload DDR5 | **D (13%)** |
+| 27 | **DeepSeek V4.1 Flash 1017 (max)** | aa_heavy_frontier | 324 | `IQ4_XS` | 118.57 GB | 3/60 (5%) | **~0.6 tok/s** | Offload DDR5 | **D (10%)** |
+| 28 | **Kimi K3.1 Pro (Frontier MoE)** | aa_heavy_frontier | 329 | `IQ4_XS` | 131.51 GB | 2/64 (3%) | **~0.5 tok/s** | Offload DDR5 | **D (9%)** |
